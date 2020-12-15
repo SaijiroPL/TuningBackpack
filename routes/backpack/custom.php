@@ -26,33 +26,24 @@ if(Request::is('admin') || Request::is('admin/*')){
 		#Customers routes
 
         Route::crud('customer', 'CustomerCrudController');
-
-        // Route::get('customer/{user}/switch-account','CustomerCrudController@switchAsCustomer');
-
-        // Route::get('customer/{user}/transactions','CustomerCrudController@transactions');
-
-        // Route::get('customer/{user}/resend-password-reset-link','CustomerCrudController@resendPasswordResetLink');
-
-        // Route::post('customer/transaction','CustomerCrudController@storeTransaction');
-
-        // Route::post('customer/transaction-evc','CustomerCrudController@storeTransactionEVC');
-
-        // Route::get('customer/transaction/{transaction}/delete','CustomerCrudController@deleteTransaction');
-
-        // Route::get('customer/{user}/file-services','CustomerCrudController@fileServices');
-
-        // Route::get('customer/file-service/{fileService}/delete','CustomerCrudController@deleteFileService');
+        Route::get('customer/{user}/switch-account','CustomerCrudController@switchAsCustomer');
+        Route::get('customer/{user}/transactions','CustomerCrudController@transactions');
+        Route::get('customer/{user}/resend-password-reset-link','CustomerCrudController@resendPasswordResetLink');
+        Route::post('customer/transaction','CustomerCrudController@storeTransaction');
+        Route::post('customer/transaction-evc','CustomerCrudController@storeTransactionEVC');
+        Route::get('customer/transaction/{transaction}/delete','CustomerCrudController@deleteTransaction');
+        Route::get('customer/{user}/file-services','CustomerCrudController@fileServices');
+        Route::get('customer/file-service/{fileService}/delete','CustomerCrudController@deleteFileService');
 
 		// #File service routes
 
-		// CRUD::resource('file-service', 'FileServiceCrudController')->with(function(){
-		// 	Route::get('file-service/{fileService}/download-orginal', 'FileServiceCrudController@downloadOrginalFile');
-		// 	Route::get('file-service/{fileService}/download-modified', 'FileServiceCrudController@downloadModifiedFile');
-		// 	Route::get('file-service/{fileService}/delete-modified', 'FileServiceCrudController@deleteModifiedFile');
-		// 	Route::get('file-service/{fileService}/create-ticket', 'FileServiceCrudController@createTicket');
-		// 	Route::post('file-service/{fileService}/store-ticket', 'FileServiceCrudController@storeTicket');
-		// 	Route::post('upload-file-service-file', 'FileServiceCrudController@uploadFile');
-		// });
+		Route::crud('file-service', 'FileServiceCrudController');
+        Route::get('file-service/{fileService}/download-orginal', 'FileServiceCrudController@downloadOrginalFile');
+        Route::get('file-service/{fileService}/download-modified', 'FileServiceCrudController@downloadModifiedFile');
+        Route::get('file-service/{fileService}/delete-modified', 'FileServiceCrudController@deleteModifiedFile');
+        Route::get('file-service/{fileService}/create-ticket', 'FileServiceCrudController@createTicket');
+        Route::post('file-service/{fileService}/store-ticket', 'FileServiceCrudController@storeTicket');
+        Route::post('upload-file-service-file', 'FileServiceCrudController@uploadFile');
 
 		// #Orders routes
 
