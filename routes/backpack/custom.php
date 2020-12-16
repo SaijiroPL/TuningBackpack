@@ -86,12 +86,10 @@ if(Request::is('admin') || Request::is('admin/*')){
 		// 	Route::get('tuning-type/{tuningType}/options/{tuningTypeOption}/down', 'TuningTypeOptionCrudController@downGradeOrder');
 		// });
 
-		// Route::group(['middleware' => 'has.privilege:admin'], function(){
-		// 	#Packages routes
-
-        //     CRUD::resource('package', 'PackageCrudController');
-        //     // CRUD::resource('zpackage', 'ZPackageCrudController');
-		// });
+		Route::group(['middleware' => 'has.privilege:admin'], function(){
+			#Packages routes
+            Route::crud('package', 'PackageCrudController');
+		});
 
 		// #Companies routes
 		Route::group(['middleware' => 'has.privilege:admin'], function(){
@@ -144,8 +142,8 @@ if(Request::is('admin') || Request::is('admin/*')){
 		// });
         //     });
 
-		// #Slider Manager routes
-		// 	CRUD::resource('slidermanager', 'SliderManagerCrudController');
+		#Slider Manager routes
+        Route::crud('slidermanager', 'SliderManagerCrudController');
 
 	});
 
