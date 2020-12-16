@@ -24,7 +24,6 @@ if(Request::is('admin') || Request::is('admin/*')){
 
 
 		#Customers routes
-
         Route::crud('customer', 'CustomerCrudController');
         Route::get('customer/{user}/switch-account','CustomerCrudController@switchAsCustomer');
         Route::get('customer/{user}/transactions','CustomerCrudController@transactions');
@@ -35,8 +34,7 @@ if(Request::is('admin') || Request::is('admin/*')){
         Route::get('customer/{user}/file-services','CustomerCrudController@fileServices');
         Route::get('customer/file-service/{fileService}/delete','CustomerCrudController@deleteFileService');
 
-		// #File service routes
-
+		#File service routes
 		Route::crud('file-service', 'FileServiceCrudController');
         Route::get('file-service/{fileService}/download-orginal', 'FileServiceCrudController@downloadOrginalFile');
         Route::get('file-service/{fileService}/download-modified', 'FileServiceCrudController@downloadModifiedFile');
@@ -45,27 +43,28 @@ if(Request::is('admin') || Request::is('admin/*')){
         Route::post('file-service/{fileService}/store-ticket', 'FileServiceCrudController@storeTicket');
         Route::post('upload-file-service-file', 'FileServiceCrudController@uploadFile');
 
-		// #Orders routes
+        #Ticket Routes
+        Route::crud('tickets', 'TicketsCrudController');
+        Route::get('tickets/{ticket}/download-file', 'TicketsCrudController@downloadFile');
+        Route::get('tickets/{ticket}/mark-close', 'TicketsCrudController@markClose');
+        Route::post('upload-ticket-file', 'TicketsCrudController@uploadFile');
 
-		// CRUD::resource('order', 'OrderCrudController')->with(function(){
-		// 	Route::get('order/{order}/invoice', 'OrderCrudController@invoice');
-		// });
+		#Orders routes
+		Route::crud('order', 'OrderCrudController');
+        Route::get('order/{order}/invoice', 'OrderCrudController@invoice');
 
-		// #Transaction routes
+		#Transaction routes
+		Route::crud('transaction', 'TransactionCrudController');
 
-		// CRUD::resource('transaction', 'TransactionCrudController');
+		#Email templates routes
+		Route::crud('email-template', 'EmailTemplateCrudController');
 
-		// #Email templates routes
-
-		// CRUD::resource('email-template', 'EmailTemplateCrudController');
-
-		// #Tuning credit routes
-		// CRUD::resource('tuning-credit', 'TuningCreditCrudController')->with(function(){
-		// 	Route::get('tuning-credit/{tuningCreditGroup}/default','TuningCreditCrudController@markDefault');
-		// 	Route::get('tuning-credit/credit-tire','TuningCreditTireController@creditTire');
-		// 	Route::post('tuning-credit/credit-tire','TuningCreditTireController@updateCreditTire');
-		// 	Route::get('tuning-credit/credit-tire/{tuningCreditTire}/delete','TuningCreditTireController@deleteCreditTire');
-        // });
+		#Tuning credit routes
+		Route::crud('tuning-credit', 'TuningCreditCrudController');
+        Route::get('tuning-credit/{tuningCreditGroup}/default','TuningCreditCrudController@markDefault');
+        Route::get('tuning-credit/credit-tire','TuningCreditTireController@creditTire');
+        Route::post('tuning-credit/credit-tire','TuningCreditTireController@updateCreditTire');
+        Route::get('tuning-credit/credit-tire/{tuningCreditTire}/delete','TuningCreditTireController@deleteCreditTire');
 
         // #Tuning EVC credit routes
 		// CRUD::resource('tuning-evc-credit', 'TuningEVCCreditCrudController')->with(function(){
@@ -75,12 +74,10 @@ if(Request::is('admin') || Request::is('admin/*')){
 		// 	Route::get('tuning-evc-credit/credit-tire/{tuningCreditTire}/delete','TuningEVCCreditTireController@deleteCreditTire');
 		// });
 
-		// #Tuning types routes
-
-		// CRUD::resource('tuning-type', 'TuningTypeCrudController')->with(function(){
-		// 	Route::get('tuning-type/{tuningType}/up', 'TuningTypeCrudController@upGradeOrder');
-		// 	Route::get('tuning-type/{tuningType}/down', 'TuningTypeCrudController@downGradeOrder');
-		// });
+		#Tuning types routes
+		Route::crud('tuning-type', 'TuningTypeCrudController');
+        Route::get('tuning-type/{tuningType}/up', 'TuningTypeCrudController@upGradeOrder');
+        Route::get('tuning-type/{tuningType}/down', 'TuningTypeCrudController@downGradeOrder');
 
 		// #Tuning type options routes
 
@@ -97,16 +94,15 @@ if(Request::is('admin') || Request::is('admin/*')){
 		// });
 
 		// #Companies routes
-		// Route::group(['middleware' => 'has.privilege:admin'], function(){
-		// 	CRUD::resource('company', 'CompanyCrudController')->with(function(){
-		// 		Route::get('company/{company}/resend-password-reset-link','CompanyCrudController@resendPasswordResetLink');
-        //         Route::get('company/{company}/company-trial-subscription','CompanyCrudController@trialSubscriptions');
-        //         Route::post('company/{company}/company-trial-subscription','CompanyCrudController@storeTrialSubscription');
-		// 		//change
-		// 			Route::get('company/{company}/company-account-type','CompanyCrudController@companyAccountType');
-		// 			Route::get('company/{company}/account-activate','CompanyCrudController@accountActivate');
-		// 	});
-		// });
+		Route::group(['middleware' => 'has.privilege:admin'], function(){
+			Route::crud('company', 'CompanyCrudController');
+            Route::get('company/{company}/resend-password-reset-link','CompanyCrudController@resendPasswordResetLink');
+            Route::get('company/{company}/company-trial-subscription','CompanyCrudController@trialSubscriptions');
+            Route::post('company/{company}/company-trial-subscription','CompanyCrudController@storeTrialSubscription');
+            //change
+            Route::get('company/{company}/company-account-type','CompanyCrudController@companyAccountType');
+            Route::get('company/{company}/account-activate','CompanyCrudController@accountActivate');
+		});
 
 		// #Company setting routes
 
@@ -129,12 +125,6 @@ if(Request::is('admin') || Request::is('admin/*')){
         // CRUD::resource('subscription-payment', 'SubscriptionPaymentCrudController')->with(function(){
         //     Route::get('subscription-payment/{id}/invoice', 'SubscriptionPaymentCrudController@invoice');
         // });
-
-        // CRUD::resource('tickets', 'Admin\TicketsCrudController')->with(function(){
-        //     Route::get('tickets/{ticket}/download-file', 'TicketsCrudController@downloadFile');
-        //     Route::get('tickets/{ticket}/mark-close', 'TicketsCrudController@markClose');
-		//     Route::post('upload-ticket-file', 'TicketsCrudController@uploadFile');
-		// });
 
 		// //CRUD::resource('subscription-payment', 'SubscriptionPaymentCrudController');
 
