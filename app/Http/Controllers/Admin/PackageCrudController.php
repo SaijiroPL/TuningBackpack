@@ -24,8 +24,8 @@ use PayPal\Api\Plan;
 class PackageCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     /**
@@ -202,7 +202,7 @@ class PackageCrudController extends MasterController
             curl_close($curl);
 
             $request->request->add(['pay_plan_id'=> json_decode($resp)->id]);
-            $redirect_location = parent::storeCrud($request);
+            $redirect_location = $this->store($request);
             return $redirect_location;
         }catch (\Exception $ex) {
             \Alert::error($ex->getMessage())->flash();
@@ -263,7 +263,7 @@ class PackageCrudController extends MasterController
 
             $request->name = $entry->name;
             $request->billing_interval = $entry->billing_interval;
-            $redirect_location = parent::updateCrud($request);
+            $redirect_location = $this->traitUpdate($request);
             return $redirect_location;
         }catch (\Exception $ex) {
             \Alert::error($ex->getMessage())->flash();

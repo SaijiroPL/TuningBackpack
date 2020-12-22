@@ -14,8 +14,8 @@ use App\Http\Controllers\MasterController;
 class EmailTemplateCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
@@ -105,7 +105,7 @@ class EmailTemplateCrudController extends MasterController
     public function store(StoreRequest $request)
     {
         $request->request->add(['company_id'=> $this->company->id]);
-        $redirect_location = parent::storeCrud($request);
+        $redirect_location = $this->store($request);
         return $redirect_location;
     }
 
@@ -125,7 +125,7 @@ class EmailTemplateCrudController extends MasterController
 
         $data['entry'] = $entry;
         $data['crud'] = $this->crud;
-        $data['saveAction'] = $this->getSaveAction();
+        $data['saveAction'] = $this->crud->getSaveAction();
         $data['fields'] = $this->crud->getUpdateFields($id);
         $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
         $data['id'] = $id;
@@ -140,7 +140,7 @@ class EmailTemplateCrudController extends MasterController
      */
     public function update(UpdateRequest $request)
     {
-        $redirect_location = parent::updateCrud($request);
+        $redirect_location = $this->traitUpdate($request);
         return $redirect_location;
     }
 }

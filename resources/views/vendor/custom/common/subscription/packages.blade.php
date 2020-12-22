@@ -1,4 +1,4 @@
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 
 @section('header')
     <section class="content-header">
@@ -53,7 +53,7 @@
         @else
             <div class="col-md-12">
                 <p>
-                    There are no subscription plans. please contact to administrator. 
+                    There are no subscription plans. please contact to administrator.
                 </p>
             </div>
         @endif

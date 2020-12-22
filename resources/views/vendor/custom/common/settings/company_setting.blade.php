@@ -1,4 +1,4 @@
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 
 @section('header')
 	<section class="content-header">
@@ -11,7 +11,7 @@
 	    </li>
 	    <li class="active"> Company information</li>
 	  </ol>
-	</section>
+    </section>
 @endsection
 @php
 // $old = session()->getOldInput();
@@ -312,7 +312,7 @@
 
 									    <div class="form-group {{ $errors->has('vat_percentage') ? ' has-error' : '' }}">
 										    <label>VAT%</label>
-									        <input name="vat_percentage" value="{{ (old('vat_percentage')) ? old('vat_percentage') : $company->vat_percentage }}" placeholder="VAT%" class="form-control" type="text" {{ (old('vat_number') != null)?'':(@$company->vat_number != null)?'':'disabled:disabled' }}>
+									        <input name="vat_percentage" value="{{ (old('vat_percentage')) ? old('vat_percentage') : $company->vat_percentage }}" placeholder="VAT%" class="form-control" type="text" {{ (old('vat_number') != null) ? '' : ((@$company->vat_number != null) ? '' : 'disabled:disabled') }}>
 									        @if ($errors->has('vat_percentage'))
 					                            <span class="help-block">
 					                                <strong>{{ $errors->first('vat_percentage') }}</strong>

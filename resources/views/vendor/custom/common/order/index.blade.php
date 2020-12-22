@@ -1,5 +1,5 @@
 @if(!empty($entry))
-	@extends('backpack::layout')
+	@extends(backpack_view('blank'))
 
 	@section('header')
 		<section class="content-header">
@@ -138,7 +138,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</div>
 

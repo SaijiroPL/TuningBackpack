@@ -16,8 +16,8 @@ use App\User;
 class CustomerCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
@@ -162,7 +162,7 @@ class CustomerCrudController extends MasterController
             'type' => 'select_from_array',
             'options' => ['Mr'=> 'Mr', 'Ms' => 'Ms'],
             'allows_null' => false,
-            'wrapperAttributes'=>['class'=>'form-group col-md-2 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
         $this->crud->addField([
@@ -170,7 +170,7 @@ class CustomerCrudController extends MasterController
             'type' => 'text',
             'label' => __('customer_msg.contactInfo_FirstName'),
             'attributes'=>['placeholder'=>'First name'],
-            'wrapperAttributes'=>['class'=>'form-group col-md-3 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
         $this->crud->addField([
@@ -178,7 +178,7 @@ class CustomerCrudController extends MasterController
             'type' => 'text',
             'label' => __('customer_msg.contactInfo_LastName'),
             'attributes'=>['placeholder'=>'Last name'],
-            'wrapperAttributes'=>['class'=>'form-group col-md-3 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
         $this->crud->addField([
             'name'=> 'blank2',
@@ -231,7 +231,7 @@ class CustomerCrudController extends MasterController
             'type' => 'text',
             'label' => __('customer_msg.contactInfo_Town'),
             'attributes'=>['placeholder'=>'Town'],
-            'wrapperAttributes'=>['class'=>'form-group col-md-3 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
         $this->crud->addField([
@@ -239,7 +239,7 @@ class CustomerCrudController extends MasterController
             'type' => 'text',
             'label' => __('customer_msg.contactInfo_PostCode')."<small class='text-muted'>(".__('customer_msg.service_Optional').")</small>",
             'attributes'=>['placeholder'=>'Zip code'],
-            'wrapperAttributes'=>['class'=>'form-group col-md-2 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
         $this->crud->addField([
@@ -247,7 +247,7 @@ class CustomerCrudController extends MasterController
             'type' => 'text',
             'label' => __('customer_msg.contactInfo_County'),
             'attributes'=>['placeholder'=>'county'],
-            'wrapperAttributes'=>['class'=>'form-group col-md-3 col-xs-12']
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
         $this->crud->addField([
@@ -283,7 +283,7 @@ class CustomerCrudController extends MasterController
     {
         try{
             $request->request->add(['company_id'=> $this->company->id]);
-            $redirect_location = parent::storeCrud($request);
+            $redirect_location = $this->store($request);
             $user = $this->crud->entry;
             $token = app('auth.password.broker')->createToken($user);
 			try{
@@ -314,7 +314,7 @@ class CustomerCrudController extends MasterController
 
         $data['entry'] = $entry;
         $data['crud'] = $this->crud;
-        $data['saveAction'] = $this->getSaveAction();
+        $data['saveAction'] = $this->crud->getSaveAction();
         $data['fields'] = $this->crud->getUpdateFields($id);
         $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
         $data['id'] = $id;
@@ -330,7 +330,7 @@ class CustomerCrudController extends MasterController
     public function update(UpdateRequest $request)
     {
         try{
-            $redirect_location = parent::updateCrud($request);
+            $redirect_location = $this->traitUpdate($request);
             return $redirect_location;
         }catch(\Exception $e){
             \Alert::error(__('admin.opps'))->flash();

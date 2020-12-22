@@ -1,5 +1,5 @@
 
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 
 @section('header')
 	<section class="content-header">

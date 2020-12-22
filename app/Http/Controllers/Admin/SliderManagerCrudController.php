@@ -18,8 +18,8 @@ use Backpack\CRUD\CrudPanel;
 class SliderManagerCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
@@ -84,7 +84,7 @@ class SliderManagerCrudController extends MasterController
     public function store(StoreRequest $request)
     {
         // your additional operations before save here
-        $redirect_location = parent::storeCrud($request);
+        $redirect_location = $this->store($request);
 		$slider = $this->crud->entry;
 		if($request->hasFile('image')){
 			if($request->file('image')->isValid()){
@@ -109,7 +109,7 @@ class SliderManagerCrudController extends MasterController
     public function update(UpdateRequest $request)
     {
         // your additional operations before save here
-        $redirect_location = parent::updateCrud($request);
+        $redirect_location = $this->traitUpdate($request);
 		$slider = $this->crud->entry;
 		if($request->hasFile('image')){
 			if($request->file('image')->isValid()){

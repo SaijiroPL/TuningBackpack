@@ -17,8 +17,8 @@ use App\Mail\TicketFileCreated;
 class FileServiceCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
@@ -136,7 +136,7 @@ class FileServiceCrudController extends MasterController
      */
     public function store(StoreRequest $request)
     {
-        $redirect_location = parent::storeCrud($request);
+        $redirect_location = $this->store($request);
         return $redirect_location;
     }
 
@@ -155,7 +155,7 @@ class FileServiceCrudController extends MasterController
 
         $data['entry'] = $entry;
         $data['crud'] = $this->crud;
-        $data['saveAction'] = $this->getSaveAction();
+        $data['saveAction'] = $this->crud->getSaveAction();
         $data['fields'] = $this->crud->getUpdateFields($id);
         $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
         $data['id'] = $id;
@@ -171,7 +171,7 @@ class FileServiceCrudController extends MasterController
      */
     public function update(UpdateRequest $request)
     {
-        $redirect_location = parent::updateCrud($request);
+        $redirect_location = $this->traitUpdate($request);
         $fileService = $this->crud->entry;
         if($request->uploaded_file != null){
             $fileService->modified_file = $request->uploaded_file;

@@ -22,8 +22,8 @@ use View, Config;
 class CompanyCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     /**
@@ -503,7 +503,7 @@ class CompanyCrudController extends MasterController
 		}
 		$company->Save();
 		$return ='company';
-		if($id ==1){
+		if($id == 1){
 			$return ='dashboard';
 		}
 		return redirect(backpack_url($return));
@@ -642,7 +642,7 @@ class CompanyCrudController extends MasterController
         }
 
         try{
-            $redirect_location = parent::storeCrud($requestData);
+            $redirect_location = $this->store($requestData);
             $company = $this->crud->entry;
 			//$company->rating = $request-> rating;
 			//$company->more_info = $request->more_info;
@@ -800,7 +800,7 @@ class CompanyCrudController extends MasterController
                         ->withInput();
         }
 
-        $redirect_location = parent::updateCrud($requestData);
+        $redirect_location = $this->traitUpdate($requestData);
 
         $company = $this->crud->entry;
 		//$company->rating = $request-> rating;

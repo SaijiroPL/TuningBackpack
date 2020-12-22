@@ -15,8 +15,8 @@ use App\Mail\TicketFileCreated;
 class TicketsCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
@@ -116,7 +116,7 @@ class TicketsCrudController extends MasterController
         $data['crud'] = $this->crud;
         $data['messages'] = $messages;
         $data['fileService'] = $fileService;
-        $data['saveAction'] = $this->getSaveAction();
+        $data['saveAction'] = $this->crud->getSaveAction();
         $data['fields'] = $this->crud->getUpdateFields($id);
         $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
         $data['id'] = $id;

@@ -1,4 +1,4 @@
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 
 @section('header')
 	<section class="content-header">
@@ -63,7 +63,7 @@
 		    	</div><!-- /.box-footer-->
 		  	</div><!-- /.box -->
 		</form>
-              
+
 	</div>
 </div>
 <div class="row">

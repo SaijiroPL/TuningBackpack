@@ -66,13 +66,12 @@ if(Request::is('admin') || Request::is('admin/*')){
         Route::post('tuning-credit/credit-tire','TuningCreditTireController@updateCreditTire');
         Route::get('tuning-credit/credit-tire/{tuningCreditTire}/delete','TuningCreditTireController@deleteCreditTire');
 
-        // #Tuning EVC credit routes
-		// CRUD::resource('tuning-evc-credit', 'TuningEVCCreditCrudController')->with(function(){
-		// 	Route::get('tuning-evc-credit/{tuningCreditGroup}/default','TuningEVCCreditCrudController@markDefault');
-		// 	Route::get('tuning-evc-credit/credit-tire','TuningEVCCreditTireController@creditTire');
-		// 	Route::post('tuning-evc-credit/credit-tire','TuningEVCCreditTireController@updateCreditTire');
-		// 	Route::get('tuning-evc-credit/credit-tire/{tuningCreditTire}/delete','TuningEVCCreditTireController@deleteCreditTire');
-		// });
+        #Tuning EVC credit routes
+		Route::crud('tuning-evc-credit', 'TuningEVCCreditCrudController');
+        Route::get('tuning-evc-credit/{tuningCreditGroup}/default','TuningEVCCreditCrudController@markDefault');
+        Route::get('tuning-evc-credit/credit-tire','TuningEVCCreditTireController@creditTire');
+        Route::post('tuning-evc-credit/credit-tire','TuningEVCCreditTireController@updateCreditTire');
+        Route::get('tuning-evc-credit/credit-tire/{tuningCreditTire}/delete','TuningEVCCreditTireController@deleteCreditTire');
 
 		#Tuning types routes
 		Route::crud('tuning-type', 'TuningTypeCrudController');
@@ -104,8 +103,8 @@ if(Request::is('admin') || Request::is('admin/*')){
 
 		// #Company setting routes
 
-		// Route::get('company-setting', 'CompanySettingController@showSetting')->name('company.setting');
-		// Route::post('update-company-setting', 'CompanySettingController@update')->name('update.company.setting');
+		Route::get('company-setting', 'CompanySettingController@showSetting')->name('company.setting');
+		Route::post('update-company-setting', 'CompanySettingController@update')->name('update.company.setting');
 
 		// #Subscription routes
 

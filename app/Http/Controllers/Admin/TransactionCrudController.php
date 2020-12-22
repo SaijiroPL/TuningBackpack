@@ -14,8 +14,8 @@ use App\Http\Requests\TransactionRequest as UpdateRequest;
 class TransactionCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
@@ -133,7 +133,7 @@ class TransactionCrudController extends MasterController
      */
     public function store(StoreRequest $request)
     {
-        $redirect_location = parent::storeCrud($request);
+        $redirect_location = $this->store($request);
         return $redirect_location;
     }
 
@@ -144,7 +144,7 @@ class TransactionCrudController extends MasterController
      */
     public function update(UpdateRequest $request)
     {
-        $redirect_location = parent::updateCrud($request);
+        $redirect_location = $this->traitUpdate($request);
         return $redirect_location;
     }
 }

@@ -1,4 +1,4 @@
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 
 @section('header')
 	<section class="content-header">
@@ -41,7 +41,7 @@
 			    @else
 			      	@include('crud::form_content', [ 'fields' => $crud->getFields('create'), 'action' => 'create' ])
 			    @endif
-		      	
+
 		    </div><!-- /.box-body -->
 		    <div class="box-footer">
 
@@ -66,7 +66,7 @@
         var action = "{{ backpack_url('company')}}?step="+active_tab;
         $("#company-form").attr("action",action);
     });
-    
+
 </script>
 @stop
 @endsection

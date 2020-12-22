@@ -1,4 +1,4 @@
-@extends('backpack::layout')
+@extends(backpack_view('blank'))
 @section('header')
 	<section class="content-header">
 	  <h1>
@@ -28,7 +28,7 @@
   		<!-- Default box -->
   		@if ($crud->hasAccess('list'))
   			 <a href="{{ url($crud->route) }}" class="hidden-print">
-              <i class="fa fa-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} 
+              <i class="fa fa-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
               <span>{{ $crud->entity_name_plural }}</span>
           </a>
           <br><br>
@@ -79,7 +79,7 @@
             </form>
           </div>
           <!-- /.box-footer-->
-        </div>     
+        </div>
   	</div>
 </div>
 @section('scripts')
