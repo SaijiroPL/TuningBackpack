@@ -36,14 +36,29 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
         'admin' => [
             'driver'   => 'session',
-            'provider' => 'users',
+            'provider' => 'admins',
+        ],
+
+        'customer' => [
+            'driver'   => 'session',
+            'provider' => 'clients',
         ],
 
         'users' => [
             'driver'   => 'session',
-            'provider' => 'clients',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
         ],
     ],
 
@@ -65,7 +80,7 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model'  => App\User::class,
         ],
@@ -73,6 +88,11 @@ return [
         'clients' => [
             'driver' => 'eloquent',
             'model'  => App\User::class,
+        ],
+
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => Backpack\Base\app\Models\BackpackUser::class,
         ],
     ],
 

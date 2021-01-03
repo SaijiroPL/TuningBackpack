@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Hashing;
-
+use App\Models\Car;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,10 +13,38 @@ use Illuminate\Hashing;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::get('/testpw', function() {
-    dd(Hash::make('aaa'));
-});
+Route::post('/carquery', function(Request $request) {
+    if ($request->model == '') {
+        $models = Car::where('brand', $request->make)
+            ->groupBy('model')
+            ->pluck('model');
+        return $models;
+    }
+    if ($request->generation == '') {
+        $generations = Car::where('brand', $request->make)
+            ->where('model', $request->model)
+            ->groupBy('year')
+            ->pluck('year');
+        return $generations;
+    }
+    if ($request->engine == '') {
+        $engines = Car::where('brand', $request->make)
+            ->where('model', $request->model)
+            ->where('year', $request->generation)
+            ->get();
+        return $engines;
+    }
+})->name('api.car.query');
+
+Route::post('/carid', function(Request $request) {
+    $id = Car::where('brand', $request->make)
+        ->where('model', $request->model)
+        ->where('year', $request->generation)
+        ->where('engine_type', $request->engine)
+        ->first()->id;
+    return $id;
+})->name('api.car.id');

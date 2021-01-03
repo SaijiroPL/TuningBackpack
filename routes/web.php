@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/admin', function () {
     return redirect(url('admin/login'));
 });
@@ -33,3 +29,22 @@ Route::group(['middleware' => 'web', 'prefix'=>'admin'], function(){
 
     Route::get('company/{company}/switch-account','\App\Http\Controllers\Auth\Admin\LoginController@switchAsCompany');
 });
+
+Auth::routes();
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/admin', function () {
+    return redirect(url('admin/login'));
+});
+
+Route::get('/customer', function () {
+    return redirect(url('customer/dashboard'));
+});
+Route::get('/user-register/', '\App\Http\Controllers\UserRegisterController@register')->name('users_registers');
+Route::post('/user-register/', '\App\Http\Controllers\UserRegisterController@create')->name('users_registers');
+Route::get('/browser', '\App\Http\Controllers\UserRegisterController@browser')->name('browser');
+Route::get('/browser/result', '\App\Http\Controllers\UserRegisterController@browserResult')->name('browser.result');
+Route::get('/browser/category', '\App\Http\Controllers\UserRegisterController@browserCategory')->name('browser.category');

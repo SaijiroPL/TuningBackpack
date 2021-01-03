@@ -97,7 +97,7 @@
 <br/>
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
+        <div class="card">
             <div class="row">
                 <div class="col-md-6">
                     <div class="box-header with-border">

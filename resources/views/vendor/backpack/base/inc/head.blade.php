@@ -12,6 +12,34 @@
     @yield('before_styles')
     @stack('before_styles')
 
+    <style type="text/css">
+        .login-container { width: 1000px; margin: auto; display: flex; flex-wrap: wrap; flex-direction: row !important }
+        .login-container .card-body { display: flex; }
+        .col-left { width: 40%; border-right: 1px solid #455a64; }
+        .col-right { width: 60%; }
+        .login-container .box-body { padding: 20px 40px; }
+        .login-container .box { margin-bottom: 0; }
+        .login-title { font-size: 24px; font-weight: bold; }
+        .login-caption { padding-left: 15px; }
+        .logo-admin { text-align: center; }
+        .logo-admin img { max-width: 100%; }
+        .col-left-browser { width: 30%; border-right: 1px solid #455a64; }
+        .col-right-browser { width: 70%; }
+        @media (max-width: 1100px) {
+            .login-container {
+                margin-left: 24px;
+                margin-right: 24px;
+            }
+        }
+        @media (max-width: 700px) {
+            .login-container .card-body { display: block; }
+            .col-left { width: 100% !important; border-right: 0px solid #455a64; }
+            .col-right { width: 100% !important; }
+            .col-left-browser { width: 100% !important; border-right: 0px solid #455a64; }
+            .col-right-browser { width: 100% !important; }
+        }
+    </style>
+
     @if (config('backpack.base.styles') && count(config('backpack.base.styles')))
         @foreach (config('backpack.base.styles') as $path)
         <link rel="stylesheet" type="text/css" href="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}">
