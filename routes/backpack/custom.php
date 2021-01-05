@@ -153,7 +153,6 @@ if(Request::is('admin') || Request::is('admin/*')){
 	    'middleware' => ['web', 'auth:customer'],
 	    'namespace'  => 'App\Http\Controllers\Customer',
 	], function () {
-
 		Route::get('/dashboard', 'DashboardController@dashboard')->name('customer.dashboard');
         Route::post('add-rating', 'DashboardController@addRating');
         Route::post('set-reseller', 'DashboardController@setReseller');
@@ -161,7 +160,6 @@ if(Request::is('admin') || Request::is('admin/*')){
 	    // Route::post('edit-account-info', 'AccountController@postAccountInfoForm');
 	    // Route::get('change-password', 'AccountController@getChangePasswordForm')->name('account.password');
 	    // Route::post('change-password', 'AccountController@postChangePasswordForm');
-
 	    #File service routes
 		Route::crud('file-service', 'FileServiceCrudController');
         Route::get('file-service/{fileService}/download-orginal', 'FileServiceCrudController@downloadOrginalFile');
@@ -169,32 +167,24 @@ if(Request::is('admin') || Request::is('admin/*')){
         Route::get('file-service/{fileService}/create-ticket', 'FileServiceCrudController@createTicket');
         Route::post('file-service/{fileService}/store-ticket', 'FileServiceCrudController@storeTicket');
         Route::post('upload-file-service-file', 'FileServiceCrudController@uploadFile');
-
-		// #Buy credit routes
-		// Route::group(['prefix'=>'buy-credits'], function(){
-		// 	Route::get('/', 'BuyCreditController@index')->name('buy.credit');
-		// 	// route for post request
-		// 	Route::post('paypal', 'PaymentController@postPaymentWithpaypal')->name('pay.with.paypal');
-		// 	// route for check status responce
-		// 	Route::get('paypal', 'PaymentController@getPaymentStatus')->name('paypal.payment.status');
-		// });
-
-		// #Orders routes
-
-		// CRUD::resource('order', 'OrderCrudController')->with(function(){
-		// 	Route::get('order/{order}/invoice', 'OrderCrudController@invoice');
-		// });
-
+		#Buy credit routes
+		Route::group(['prefix'=>'buy-credits'], function(){
+			Route::get('/', 'BuyCreditController@index')->name('buy.credit');
+			// route for post request
+			Route::post('paypal', 'PaymentController@postPaymentWithpaypal')->name('pay.with.paypal');
+			// route for check status responce
+			Route::get('paypal', 'PaymentController@getPaymentStatus')->name('paypal.payment.status');
+		});
+		#Orders routes
+		Route::crud('order', 'OrderCrudController');
+        Route::get('order/{order}/invoice', 'OrderCrudController@invoice');
 		// #Transaction routes
-
-		// CRUD::resource('transaction', 'TransactionCrudController');
-        //         #Tickets routes
-        //         CRUD::resource('tickets', 'TicketsCrudController')->with(function(){
-        //             Route::get('tickets/{ticket}/download-file', 'TicketsCrudController@downloadFile');
-        //             Route::get('tickets/{ticket}/mark-close', 'TicketsCrudController@markClose');
-		//     Route::post('upload-ticket-file', 'TicketsCrudController@uploadFile');
-
-		// });
+		Route::crud('transaction', 'TransactionCrudController');
+        #Tickets routes
+        Route::crud('tickets', 'TicketsCrudController');
+        Route::get('tickets/{ticket}/download-file', 'TicketsCrudController@downloadFile');
+        Route::get('tickets/{ticket}/mark-close', 'TicketsCrudController@markClose');
+        Route::post('upload-ticket-file', 'TicketsCrudController@uploadFile');
 	});
 
 }else{

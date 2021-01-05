@@ -271,7 +271,7 @@ class FileServiceCrudController extends MasterController
         $this->crud->addField([
             'name' => 'file',
             'label' => "File",
-            'type' => 'file',
+            'type' => 'upload',
             'url'  => url('customer/upload-file-service-file'),
             'upload' => true,
             'wrapperAttributes'=>['class'=>'form-group col-md-10 col-xs-12']

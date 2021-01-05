@@ -1,39 +1,99 @@
-<!-- select2 -->
-
-<div @include('crud::inc.field_wrapper_attributes') >
+<!-- select2 from array -->
+@include('crud::fields.inc.wrapper_start')
     <label>{!! $field['label'] !!}</label>
-    @include('crud::inc.field_translatable_icon')
-    <?php $entity_model = $crud->model; ?>
     <select
         name="{{ $field['name'] }}@if (isset($field['allows_multiple']) && $field['allows_multiple']==true)[]@endif"
-        @include('crud::inc.field_attributes')
-        @if (isset($field['allows_multiple']) && $field['allows_multiple']==true)multiple @endif>
-            <option value="">Select tuning type</option>
-            @if (count($field['options']))
-                @foreach ($field['options'] as $key => $value)
-                    <option value="{{ $key }}"
-                        @if (isset($field['value']) && ($key==$field['value'] || (is_array($field['value']) && in_array($key, $field['value'])))
-                            || ( ! is_null( old($field['name']) ) && old($field['name']) == $key))
-                             selected
-                        @endif
-                    >{{ $value }}</option>
-                @endforeach
-            @endif
+        style="width: 100%"
+        data-init-function="bpFieldInitSelect2FromArrayElement"
+        @include('crud::fields.inc.attributes', ['default_class' =>  'form-control select2_from_array'])
+        @if (isset($field['allows_multiple']) && $field['allows_multiple']==true)multiple @endif
+        >
+
+        @if (isset($field['allows_null']) && $field['allows_null']==true)
+            <option value="">-</option>
+        @endif
+
+        @if (count($field['options']))
+            @foreach ($field['options'] as $key => $value)
+                @if((old(square_brackets_to_dots($field['name'])) && (
+                        $key == old(square_brackets_to_dots($field['name'])) ||
+                        (is_array(old(square_brackets_to_dots($field['name']))) &&
+                        in_array($key, old(square_brackets_to_dots($field['name'])))))) ||
+                        (null === old(square_brackets_to_dots($field['name'])) &&
+                            ((isset($field['value']) && (
+                                        $key == $field['value'] || (
+                                                is_array($field['value']) &&
+                                                in_array($key, $field['value'])
+                                                )
+                                        )) ||
+                                (!isset($field['value']) && isset($field['default']) &&
+                                ($key == $field['default'] || (
+                                                is_array($field['default']) &&
+                                                in_array($key, $field['default'])
+                                            )
+                                        )
+                                ))
+                        ))
+                    <option value="{{ $key }}" selected>{{ $value }}</option>
+                @else
+                    <option value="{{ $key }}">{{ $value }}</option>
+                @endif
+            @endforeach
+        @endif
     </select>
 
     {{-- HINT --}}
     @if (isset($field['hint']))
         <p class="help-block">{!! $field['hint'] !!}</p>
     @endif
+@include('crud::fields.inc.wrapper_end')
 
-</div>
+{{-- ########################################## --}}
+{{-- Extra CSS and JS for this particular field --}}
+{{-- If a field type is shown multiple times on a form, the CSS and JS will only be loaded once --}}
+@if ($crud->fieldTypeNotLoaded($field))
+    @php
+        $crud->markFieldTypeAsLoaded($field);
+    @endphp
+
+    {{-- FIELD CSS - will be loaded in the after_styles section --}}
+    @push('crud_fields_styles')
+    <!-- include select2 css-->
+    <link href="{{ asset('packages/select2/dist/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('packages/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    @endpush
+
+    {{-- FIELD JS - will be loaded in the after_scripts section --}}
+    @push('crud_fields_scripts')
+    <!-- include select2 js-->
+    <script src="{{ asset('packages/select2/dist/js/select2.full.min.js') }}"></script>
+    @if (app()->getLocale() !== 'en')
+    <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script>
+    @endif
+    <script>
+        function bpFieldInitSelect2FromArrayElement(element) {
+            if (!element.hasClass("select2-hidden-accessible"))
+                {
+                    element.select2({
+                        theme: "bootstrap"
+                    }).on('select2:unselect', function(e) {
+                        if ($(this).attr('multiple') && $(this).val().length == 0) {
+                            $(this).val(null).trigger('change');
+                        }
+                    });
+                }
+        }
+    </script>
+    @endpush
+
+@endif
 <!-- select2 -->
-<div class="form-group col-xs-12">
-    @php 
-        $entity_model = 'TuningTypeOptions'; 
+{{-- <div class="form-group col-xs-12">
+    @php
+        $entity_model = 'TuningTypeOptions';
         if(isset($entry) && !empty($entry->getKey())){
             $tuningTypeOptions =  $entry->tuningType->tuningTypeOptions;
-        } 
+        }
     @endphp
     <div class="tuning-type-option">
         @if(@$tuningTypeOptions)
@@ -47,13 +107,13 @@
                                 <input type="checkbox"
                                   name="tuning_type_options[]"
                                   value="{{ $connected_entity_entry->getKey() }}"
-                                  checked="checked" 
-                                > 
+                                  checked="checked"
+                                >
                             @else
                                 <input type="checkbox"
                                   name="tuning_type_options[]"
                                   value="{{ $connected_entity_entry->getKey() }}"
-                                > 
+                                >
                             @endif
                             {!! $connected_entity_entry->label !!}
                           </label>
@@ -94,5 +154,4 @@
 
         });
     </script>
-@endpush
- 
+@endpush --}}
