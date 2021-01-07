@@ -1,38 +1,27 @@
-
 @extends(backpack_view('blank'))
+@php
+  $defaultBreadcrumbs = [
+    trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+    $crud->entity_name_plural => url($crud->route),
+    'Add Ticket' => false,
+  ];
 
+  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
 @section('header')
-	<section class="content-header">
-	  	<h1>
-        	<span class="text-capitalize">{{__('customer_msg.contactus_ContactUs')}}</span>
-	  	</h1>
-		<ol class="breadcrumb">
-		    <li>
-		    	<a class="text-capitalize" href="{{ url(config('backpack.base.route_prefix'), 'dashboard') }}">
-			    	{{ config('backpack.base.route_prefix') }}
-			    </a>
-		    </li>
-		    <li>
-		    	<a href="{{ url($crud->route) }}" class="text-capitalize">
-		    		{{ $crud->entity_name_plural }}
-		    	</a>
-		    </li>
-		    <li class="active">
-			    {{ trans('backpack::crud.add') }}
-			</li>
-		</ol>
+	<section class="container-fluid">
+	  <h2>
+        <span class="text-capitalize">{{__('customer_msg.contactus_ContactUs')}}</span>
+
+        @if ($crud->hasAccess('list'))
+          <small><a href="{{ url($crud->route) }}" class="d-print-none font-sm"><i class="la la-angle-double-{{ config('backpack.base.html_direction') == 'rtl' ? 'right' : 'left' }}"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
+        @endif
+	  </h2>
 	</section>
 @endsection
 
 @section('content')
-	@if ($crud->hasAccess('list'))
-		<a href="{{ url($crud->route) }}" class="hidden-print">
-			<i class="fa fa-angle-double-left"></i>
-			{{ trans('backpack::crud.back_to_all') }}
-			<span>{{ $crud->entity_name_plural }}</span>
-		</a>
-		<br><br>
-	@endif
 	<div class="row">
 		<div class="col-md-12">
 			@include('crud::inc.grouped_errors')
@@ -41,8 +30,8 @@
 	<div class="row">
 		<div class="col-md-6 col-xs-12">
 			<!-- Default box -->
-	        <div class="box">
-	            <div class="box-body row display-flex-wrap" style="display: flex; flex-wrap: wrap;">
+	        <div class="card">
+	            <div class="card-body row display-flex-wrap" style="display: flex; flex-wrap: wrap;">
 	              	<form method="post"
 	                    action="{{ backpack_url('file-service/'.$fileService->id.'/store-ticket') }}"
 	                    @if ($crud->hasUploadFields('create'))
@@ -82,11 +71,11 @@
 	    <div class="col-md-6 col-xs-12">
 	    	<div class="row">
 	    		<div class="col-md-12">
-	    			<div class="box">
-					    <div class="box-header with-border">
+	    			<div class="card">
+					    <div class="card-header with-border">
 					      	<h3 class="box-title">{{__('customer_msg.service_FileServiceInfo')}}</h3>
 					    </div>
-				    	<div class="box-body display-flex-wrap" style="display: flex; flex-wrap: wrap;">
+				    	<div class="card-body display-flex-wrap" style="display: flex; flex-wrap: wrap;">
 				    		<div class="table-responsive" style="width:100%">
 								<table class="table table-striped">
 						            <tr>
@@ -141,11 +130,11 @@
 	    	</div>
 	    	<div class="row">
 	    		<div class="col-md-12">
-	    			<div class="box">
-					    <div class="box-header with-border">
+	    			<div class="card">
+					    <div class="card-header with-border">
 					      	<h3 class="box-title">{{__('customer_msg.contactus_CarInformation')}}</h3>
 					    </div>
-				    	<div class="box-body display-flex-wrap" style="display: flex; flex-wrap: wrap;">
+				    	<div class="card-body display-flex-wrap" style="display: flex; flex-wrap: wrap;">
 				    		<div class="table-responsive" style="width:100%">
 								<table class="table table-striped">
 						            <tr>

@@ -198,7 +198,7 @@ class CompanyCrudController extends MasterController
         $this->crud->addField([
             'name' => 'file',
             'label' => "Logo <small class='text-muted'>(optional)</small>",
-            'type' => 'preview_file',
+            'type' => 'upload',
             'tab' => 'Name and address',
             'value'=> 'default-logo.png',
             'upload' => true,

@@ -78,7 +78,7 @@
     border-bottom-left-radius: 3px;
     padding: 10px;
 }
-.nav-tabs-custom {
+/* .nav-tabs-custom {
     margin-bottom: 20px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
@@ -92,4 +92,4 @@
 }
 .nav-tabs-custom > .nav-tabs > li.active {
     border-top-color: #0f0193;
-}
+} */

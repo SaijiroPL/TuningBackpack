@@ -1,37 +1,42 @@
+@php
+  $defaultBreadcrumbs = [
+    trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+    $crud->entity_name_plural => url($crud->route),
+    'File service:#'.$entry->car => false,
+  ];
+
+  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
+@section('header')
+	<section class="container-fluid">
+	  <h2>
+        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</span>
+        <small>{!! $crud->getSubheading() ?? trans('backpack::crud.edit').' '.$crud->entity_name !!}.</small>
+
+        @if ($crud->hasAccess('list'))
+          <small><a href="{{ url($crud->route) }}" class="d-print-none font-sm"><i class="la la-angle-double-{{ config('backpack.base.html_direction') == 'rtl' ? 'right' : 'left' }}"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
+        @endif
+	  </h2>
+	</section>
+@endsection
 @if(!empty($entry))
 	@extends(backpack_view('blank'))
-
-	@section('header')
-		<section class="content-header">
-		  <h1>
-	        <span class="text-capitalize">File service</span>
-	        <small>Edit file service.</small>
-		  </h1>
-		  <ol class="breadcrumb">
-		    <li><a href="{{ url(config('backpack.base.route_prefix'), 'dashboard') }}">{{ trans('backpack::crud.admin') }}</a></li>
-		    <li><a href="{{ backpack_url('file-service') }}" class="text-capitalize">File services1</a></li>
-		    <li class="active">File service:#{{ $entry->car }}</li>
-		  </ol>
-		</section>
-	@endsection
 
 	@section('content')
 		<div class="row">
 			<div class="col-md-12">
 				<!-- Default box -->
-				<a href="{{ backpack_url('file-service') }}" class="hidden-print">
-					<i class="fa fa-angle-double-left"></i> Back to all  <span>file services</span>
-				</a><br><br>
 				<div class="row">
 					<div class="col-md-6">
 						<form method="post" action="{{ backpack_url('file-service/'.$entry->id) }}" enctype="multipart/form-data">
 						  	@csrf
 						  	@method('PUT')
-						  	<div class="box">
+						  	<div class="card">
 							    <div class="box-header with-border">
 							      	<h3 class="box-title">Process the file service</h3>
 							    </div>
-						    	<div class="box-body row display-flex-wrap" style="display: flex; flex-wrap: wrap;">
+						    	<div class="card-body">
 						    		<div class="hidden ">
 									  	<input name="id" value="{{ $entry->id }}" class="form-control" type="hidden">
 									</div>
@@ -69,7 +74,7 @@
 								    </div>
 								    <div class="form-group col-xs-12 required {{ $errors->has('notes_by_engineer') ? ' has-error' : '' }}">
 									    <label>Notes by engineer <small class="text-muted">(optional)</small></label>
-								        <textarea name="notes_by_engineer" placeholder="Notes by engineer" class="form-control">{{ (old('notes_by_engineer'))?old('notes_by_engineer'):($entry->notes_by_engineer)?$entry->notes_by_engineer:'' }}</textarea>
+								        <textarea name="notes_by_engineer" placeholder="Notes by engineer" class="form-control">{{ (old('notes_by_engineer'))?old('notes_by_engineer'):(($entry->notes_by_engineer)?$entry->notes_by_engineer:'') }}</textarea>
 								        @if($errors->has('notes_by_engineer'))
 				                            <span class="help-block">
 				                                <strong>{{ $errors->first('notes_by_engineer') }}</strong>
@@ -77,7 +82,7 @@
 				                        @endif
 								    </div>
 						    	</div><!-- /.box-body -->
-							    <div class="box-footer">
+							    <div class="card-footer">
 					                <div id="saveActions" class="form-group">
 									    <div class="btn-group">
 									        <button type="submit" class="btn btn-danger">
@@ -89,7 +94,7 @@
 						    	</div>
 						  	</div>
 						</form>
-						<div class="box">
+						<div class="card">
 						    <div class="box-header with-border">
 						      	<h3 class="box-title">Customer information</h3>
 						    </div>
@@ -122,7 +127,7 @@
 					  	</div>
 					</div>
 					<div class="col-md-6">
-						<div class="box">
+						<div class="card">
 						    <div class="box-header with-border">
 						      	<h3 class="box-title">File service information</h3>
 						    </div>
@@ -179,7 +184,7 @@
 					    	</div>
 					  	</div>
 
-					  	<div class="box">
+					  	<div class="card">
 						    <div class="box-header with-border">
 						      	<h3 class="box-title">Car information</h3>
 						    </div>
