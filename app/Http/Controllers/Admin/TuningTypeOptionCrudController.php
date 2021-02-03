@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\MasterController;
-use App\Http\Requests\TuningTypeRequest as StoreRequest;
-use App\Http\Requests\TuningTypeRequest as UpdateRequest;
+use App\Http\Requests\TuningTypeOptionRequest as StoreRequest;
+use App\Http\Requests\TuningTypeOptionRequest as UpdateRequest;
 
 /**
- * Class TuningTypeCrudController
+ * Class TuningTypeOptionCrudController
  * @param App\Http\Controllers\Admin
  * @property-read CrudPanel $crud
  */
-class TuningTypeCrudController extends MasterController
+class TuningTypeOptionCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
@@ -20,26 +20,37 @@ class TuningTypeCrudController extends MasterController
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
     public function setup()
     {
+        $tuningTypeId = \Route::current()->parameter('tuningType');
+        $tuningType = \App\Models\TuningType::find($tuningTypeId);
+        if(!$tuningType){
+            \Alert::error(__('admin.select_tuning_type'))->flash();
+        }
         /*
         |--------------------------------------------------------------------------
         | CrudPanel Basic Information
         |--------------------------------------------------------------------------
         */
-        $this->crud->setModel('App\Models\TuningType');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/tuning-type');
-        $this->crud->setEntityNameStrings('tuning type', 'tuning types');
+        $this->crud->setModel('App\Models\TuningTypeOption');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/tuning-type/'.$tuningTypeId.'/options');
+        $this->crud->setEntityNameStrings('tuning type option', 'Tuning options for '.@$tuningType->label);
 
         /*
         |--------------------------------------------------------------------------
         | CrudPanel Configuration
         |--------------------------------------------------------------------------
         */
+
+        $this->crud->addButtonFromView('top', 'back_to_tuning_type', 'back_to_tuning_type' , 'beginning');
         $this->crud->addButtonFromView('line', 'up_grade_order', 'up_grade_order', 'end');
         $this->crud->addButtonFromView('line', 'down_grade_order', 'down_grade_order' , 'end');
         $this->crud->enableExportButtons();
 
         $user = \Auth::guard('admin')->user();
-        $this->crud->query->where('company_id', $user->company_id);
+        $this->crud->query->where('tuning_type_id', $tuningTypeId);
+        $this->crud->query->whereHas('tuningType', function($query) use($user){
+            return $query->where('company_id', $user->company_id);
+        });
+
         $this->crud->query->orderBy('order_as', 'ASC');
 
         /*
@@ -50,24 +61,18 @@ class TuningTypeCrudController extends MasterController
 
         $this->crud->addColumn([
             'name' => 'label',
-            'label' => __('customer_msg.tb_header_Label'),
+            'label' => 'Label',
         ]);
+
 
         $this->crud->addColumn([
             'name' => 'credits',
-            'label' => __('customer_msg.tb_header_Credit'),
+            'label' => 'Credits',
         ]);
 
         $this->crud->addColumn([
-            'name' => 'options',
-            'label' => __('customer_msg.tb_header_TuningOptions'),
-            'type' => "model_function",
-            'function_name' => 'getTuningOptionsWithLink',
-            'wrapper' => [
-                'href' => function ($crud, $column, $entry, $related_key) {
-                    return backpack_url('tuning-type/'.$entry->id.'/options');
-                },
-            ]
+            'name' => 'tooltip',
+            'label' => 'Tooltip',
         ]);
 
         /*
@@ -77,10 +82,29 @@ class TuningTypeCrudController extends MasterController
         */
 
         $this->crud->addField([
+            'name' => 'tuning_type_id',
+            'type' => 'hidden',
+            'value' => $tuningTypeId
+        ]);
+
+        $this->crud->addField([
             'name' => 'label',
             'label' => "Label",
             'type' => 'text',
             'attributes'=>['placeholder'=>'Label'],
+            'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
+        ]);
+
+        $this->crud->addField([
+            'name'=> 'blank1',
+            'type' => 'blank',
+        ]);
+
+        $this->crud->addField([
+            'name' => 'tooltip',
+            'label' => "Tooltip <small class='text-muted'>(optional)</small>",
+            'type' => 'text',
+            'attributes'=>['placeholder'=>'Tooltip'],
             'wrapperAttributes'=>['class'=>'form-group col-md-4 col-xs-12']
         ]);
 
@@ -108,12 +132,11 @@ class TuningTypeCrudController extends MasterController
      */
     public function store(StoreRequest $request)
     {
-        $request->request->add(['company_id'=> $this->company->id]);
-        $redirect_location = $this->store($request);
-        $tuningType = $this->crud->entry;
-        //$tuningType->order_as = $tuningType->id;
-		$tuningType->order_as = \App\Models\TuningType::where('company_id', $this->company->id)->count();
-        $tuningType->save();
+        $redirect_location = parent::storeCrud($request);
+        $tuningTypeOption = $this->crud->entry;
+        //$tuningTypeOption->order_as = $tuningTypeOption->id;
+		$tuningTypeOption->order_as = \App\Models\TuningTypeOption::where('tuning_type_id',$tuningTypeOption->tuning_type_id)->count();
+        $tuningTypeOption->save();
         return $redirect_location;
     }
 
@@ -127,13 +150,13 @@ class TuningTypeCrudController extends MasterController
         $id = $this->crud->getCurrentEntryId() ?? $id;
         $entry = $this->crud->getEntry($id);
 
-        if($this->company->id != $entry->company->id){
+        if($this->company->id != $entry->tuningType->company->id){
             abort(403, __('admin.no_permission'));
         }
 
         $data['entry'] = $entry;
         $data['crud'] = $this->crud;
-        $data['saveAction'] = $this->crud->getSaveAction();
+        $data['saveAction'] = $this->getSaveAction();
         $data['fields'] = $this->crud->getUpdateFields($id);
         $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
         $data['id'] = $id;
@@ -148,23 +171,22 @@ class TuningTypeCrudController extends MasterController
      */
     public function update(UpdateRequest $request)
     {
-        $redirect_location = $this->traitUpdate($request);
+        $redirect_location = parent::updateCrud($request);
         return $redirect_location;
     }
-
 
     /**
      * Upgrade order
      * @param \App\Models\TuningType $tuningType
+     * @param \App\Models\TuningTypeOption $tuningTypeOption
      * @return $response
      */
-    public function upGradeOrder(\App\Models\TuningType $tuningType)
+    public function upGradeOrder($tuningType, \App\Models\TuningTypeOption $tuningTypeOption)
     {
         try{
-            $current = $tuningType;
-            $previous = \App\Models\TuningType::where('company_id', $this->company->id)->where('order_as', '<', $current->order_as)->orderBy('order_as', 'DESC')->first();
+            $current = $tuningTypeOption;
+            $previous = \App\Models\TuningTypeOption::where('tuning_type_id', $current->tuning_type_id)->where('order_as', '<', $current->order_as)->orderBy('order_as', 'DESC')->first();
             if($previous){
-                //dd($previous);
                 $currentOrder = $current->order_as;
                 $previousOrder = $previous->order_as;
                 $current->order_as = $previousOrder;
@@ -175,19 +197,22 @@ class TuningTypeCrudController extends MasterController
         }catch(\Exception $e){
             \Alert::error(__('admin.opps'))->flash();
         }
-        return redirect(url('admin/tuning-type'));
+        return redirect()->back();
     }
+
 
     /**
      * Downgrade order
      * @param \App\Models\TuningType $tuningType
+     * @param \App\Models\TuningTypeOption $tuningTypeOption
      * @return $response
      */
-    public function downGradeOrder(\App\Models\TuningType $tuningType)
+    public function downGradeOrder($tuningType, \App\Models\TuningTypeOption $tuningTypeOption)
     {
         try{
-            $current = $tuningType;
-            $next = \App\Models\TuningType::where('company_id', $this->company->id)->where('order_as', '>', $current->order_as)->orderBy('order_as', 'ASC')->first();
+            $current = $tuningTypeOption;
+			//dd($current);
+            $next = \App\Models\TuningTypeOption::where('tuning_type_id', $current->tuning_type_id)->where('order_as', '>', $current->order_as)->orderBy('order_as', 'ASC')->first();
             if($next){
                 $currentOrder = $current->order_as;
                 $nextOrder = $next->order_as;
@@ -199,6 +224,6 @@ class TuningTypeCrudController extends MasterController
         }catch(\Exception $e){
             \Alert::error(__('admin.opps'))->flash();
         }
-        return redirect(url('admin/tuning-type'));
+        return redirect()->back();
     }
 }

@@ -57,7 +57,8 @@ class SliderManagerCrudController extends MasterController
 		$this->crud->addField([
             'name' => 'image',
             'label' => "Image",
-            'type' => 'preview_file',
+            'type' => 'image',
+            'prefix' => 'uploads/logo/',
             'upload' => true,
             'wrapperAttributes'=>['class'=>'form-group col-md-6 col-xs-12']
         ]);
@@ -66,9 +67,10 @@ class SliderManagerCrudController extends MasterController
         $this->crud->addColumn([
 			'label' => "Image",
 		    'name' => 'image',
-			'type' => "model_function",
-			'function_name' => 'showImage',
-
+            'type' => 'image',
+            'prefix' => 'uploads/logo/',
+            'width' => '100px',
+            'height' => '100px',
 		]);
 
 

@@ -80,10 +80,9 @@ if(Request::is('admin') || Request::is('admin/*')){
 
 		// #Tuning type options routes
 
-		// CRUD::resource('tuning-type/{tuningType}/options', 'TuningTypeOptionCrudController')->with(function(){
-		// 	Route::get('tuning-type/{tuningType}/options/{tuningTypeOption}/up', 'TuningTypeOptionCrudController@upGradeOrder');
-		// 	Route::get('tuning-type/{tuningType}/options/{tuningTypeOption}/down', 'TuningTypeOptionCrudController@downGradeOrder');
-		// });
+		Route::crud('tuning-type/{tuningType}/options', 'TuningTypeOptionCrudController');
+        Route::get('tuning-type/{tuningType}/options/{tuningTypeOption}/up', 'TuningTypeOptionCrudController@upGradeOrder');
+        Route::get('tuning-type/{tuningType}/options/{tuningTypeOption}/down', 'TuningTypeOptionCrudController@downGradeOrder');
 
 		Route::group(['middleware' => 'has.privilege:admin'], function(){
 			#Packages routes
@@ -99,12 +98,13 @@ if(Request::is('admin') || Request::is('admin/*')){
             //change
             Route::get('company/{company}/company-account-type','CompanyCrudController@companyAccountType');
             Route::get('company/{company}/account-activate','CompanyCrudController@accountActivate');
-		});
+        });
+        Route::get('company-setting', 'CompanyCrudController@profile');
 
 		// #Company setting routes
 
-		Route::get('company-setting', 'CompanySettingController@showSetting')->name('company.setting');
-		Route::post('update-company-setting', 'CompanySettingController@update')->name('update.company.setting');
+		// Route::get('company-setting', 'CompanySettingController@showSetting')->name('company.setting');
+		// Route::post('update-company-setting', 'CompanySettingController@update')->name('update.company.setting');
 
 		// #Subscription routes
 

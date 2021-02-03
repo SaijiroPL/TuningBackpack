@@ -51,7 +51,8 @@ class TuningType extends Model
     public function getTuningOptionsWithLink() {
 
         $url = backpack_url('tuning-type/'.$this->id.'/options');
-        return '<a href="'.url($url).'">'.$this->tuningTypeOptions()->count().' tuning options</a>';
+        // return '<a href="'.url($url).'">'.$this->tuningTypeOptions()->count().' tuning options</a>';
+        return $this->tuningTypeOptions()->count().' tuning options';
     }
 
     /**

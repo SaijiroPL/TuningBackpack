@@ -196,11 +196,11 @@ class CompanyCrudController extends MasterController
         ]);
 
         $this->crud->addField([
-            'name' => 'file',
+            'name' => 'logo',
             'label' => "Logo <small class='text-muted'>(optional)</small>",
-            'type' => 'upload',
+            'type' => 'image',
+            'prefix' => 'uploads/logo/',
             'tab' => 'Name and address',
-            'value'=> 'default-logo.png',
             'upload' => true,
             'wrapperAttributes'=>['class'=>'form-group col-md-6 col-xs-12']
         ]);
@@ -647,9 +647,9 @@ class CompanyCrudController extends MasterController
 			//$company->rating = $request-> rating;
 			//$company->more_info = $request->more_info;
 
-            if($request->hasFile('file')){
-                if($request->file('file')->isValid()){
-                    $file = $request->file('file');
+            if($request->hasFile('logo')){
+                if($request->file('logo')->isValid()){
+                    $file = $request->file('logo');
                     $filename = time() . '.' . $file->getClientOriginalExtension();
                     $file->move(public_path('/uploads/logo'), $filename);
                     $company->logo = $filename;
@@ -725,7 +725,7 @@ class CompanyCrudController extends MasterController
     public function update(Request $request){
         $requestData = \Illuminate\Http\Request::capture();
         switch($request->current_tab){
-            case 'nameandaddress':
+            case 'name-and-address':
                 $validator = Validator::make($request->only(['name', 'country', 'state', 'town', 'address_line_1', 'address_line_2', 'post_code', 'logo', 'theme_color', 'copy_right_text']),[
                     'name' => 'bail|required|string|max:100',
                     'address_line_1'=> 'bail|required|string|max:100',
@@ -741,13 +741,13 @@ class CompanyCrudController extends MasterController
                 $requestData->replace($request->only(['id', 'name', 'country', 'state', 'town', 'address_line_1', 'address_line_2', 'post_code', 'logo', 'theme_color','copy_right_text']));
 
                 break;
-            case 'domaininformation':
+            case 'domain-information':
                 $validator = Validator::make($request->only('domain_link'), [
                     'domain_link'=> 'bail|required|url|unique:companies,domain_link,'.$request->id.',id|max:100'
                 ]);
                 $requestData->replace($request->only(['id', 'domain_link']));
                 break;
-            case 'emailaddress':
+            case 'email-address':
                 $validator = Validator::make($request->only(['main_email_address', 'support_email_address', 'billing_email_address']), [
                     'main_email_address'=> 'bail|required|email|unique:companies,main_email_address,'.$request->id.',id|unique:users,email,'.$request->id.',company_id|max:100',
                     'support_email_address'=> 'bail|nullable|email|max:100',
@@ -756,7 +756,7 @@ class CompanyCrudController extends MasterController
 
                   $requestData->replace($request->only(['id', 'main_email_address', 'support_email_address', 'billing_email_address']));
                 break;
-            case 'financialinformation':
+            case 'financial-information':
                 $validator = Validator::make($request->only(['bank_account', 'bank_identification_code', 'vat_number', 'vat_percentage']), [
                     'bank_account'=> 'bail|nullable|string|max:100',
                     'bank_identification_code'=> 'bail|nullable|string|max:100',
@@ -765,13 +765,13 @@ class CompanyCrudController extends MasterController
                 ]);
                  $requestData->replace($request->only(['id', 'bank_account', 'bank_identification_code', 'vat_number', 'vat_percentage']));
                 break;
-            case 'notestocustomers':
+            case 'notes-to-customers':
                 $validator = Validator::make($request->only('customer_note'), [
                     'customer_note'=> 'bail|nullable|string',
                 ]);
                 $requestData->replace($request->only(['id', 'customer_note']));
                 break;
-            case 'smtpinformation':
+            case 'smtp-information':
                 $validator = Validator::make($requestData = $request->only(['mail_host', 'mail_port', 'mail_username', 'mail_password']), [
                     'mail_driver'=> 'bail|nullable|string|max:20',
                     'mail_host'=> 'bail|nullable|string|max:100',
@@ -781,7 +781,7 @@ class CompanyCrudController extends MasterController
                 ]);
                 $requestData->replace($request->only(['id', 'mail_host', 'mail_port', 'mail_username', 'mail_password']));
                 break;
-            case 'paypalinformation':
+            case 'paypal-information':
                 $validator = Validator::make($request->only(['paypal_client_id', 'paypal_secret', 'paypal_currency_code']), [
                     'paypal_client_id'=> 'bail|nullable|string|max:200',
                     'paypal_secret'=> 'bail|nullable|string|max:200',
@@ -805,9 +805,9 @@ class CompanyCrudController extends MasterController
         $company = $this->crud->entry;
 		//$company->rating = $request-> rating;
 		//$company->more_info = $request->more_info;
-        if($request->hasFile('file')){
-            if($request->file('file')->isValid()){
-                $file = $request->file('file');
+        if($request->hasFile('logo')){
+            if($request->file('logo')->isValid()){
+                $file = $request->file('logo');
                 $filename = time() . '.' . $file->getClientOriginalExtension();
 
 
@@ -966,5 +966,23 @@ class CompanyCrudController extends MasterController
             return redirect()->back()->withInput($request->all());
         }
 
+    }
+
+    public function profile() {
+        $this->crud->addSaveActions([
+            [
+                'name' => 'Save',
+                'visible' => function($crud) {
+                    return true;
+                },
+                'redirect' => function($crud, $request, $itemId) {
+                    return $crud->route;
+                },
+            ],
+        ]);
+        $this->crud->setEditView('vendor.custom.common.settings.company_setting');
+        $this->crud->setOperationSetting('showCancelButton', false);
+        $user = \Auth::guard('admin')->user();
+        return $this->edit($user->company->id);
     }
 }

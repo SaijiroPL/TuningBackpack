@@ -1,42 +1,33 @@
 @extends(backpack_view('blank'))
+@php
+  $defaultBreadcrumbs = [
+    trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+    $crud->entity_name_plural => url($crud->route),
+    trans('backpack::crud.add') => false,
+  ];
+
+  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
 @section('header')
-	<section class="content-header">
-	  <h1>
-        <span class="text-capitalize">Contact Us</span>
-	  </h1>
-	  <ol class="breadcrumb">
-	       <li>
-            <a class="text-capitalize" href="{{ url(config('backpack.base.route_prefix'), 'dashboard') }}">
-              {{ config('backpack.base.route_prefix') }}
-            </a>
-        </li>
-	     <li>
-          <a href="{{ url($crud->route) }}" class="text-capitalize">
-            {{ $crud->entity_name_plural }}
-          </a>
-        </li>
-	      <li class="active">
-            {{ trans('backpack::crud.add') }}
-        </li>
-	  </ol>
+	<section class="container-fluid">
+	  <h2>
+        <span class="text-capitalize">{{__('customer_msg.contactus_ContactUs')}}</span>
+
+        @if ($crud->hasAccess('list'))
+          <small><a href="{{ url($crud->route) }}" class="d-print-none font-sm"><i class="la la-angle-double-{{ config('backpack.base.html_direction') == 'rtl' ? 'right' : 'left' }}"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
+        @endif
+	  </h2>
 	</section>
 @endsection
+
 
 @section('content')
 <div class="row">
   	<div class="col-md-6 col-xs-12">
-  		<!-- Default box -->
-  		@if ($crud->hasAccess('list'))
-  			 <a href="{{ url($crud->route) }}" class="hidden-print">
-              <i class="fa fa-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }}
-              <span>{{ $crud->entity_name_plural }}</span>
-          </a>
-          <br><br>
-  		@endif
-
   		@include('crud::inc.grouped_errors')
-      <div class="box">
-          <div class="box-body row display-flex-wrap">
+      <div class="card">
+          <div class="card-body row display-flex-wrap">
             <form method="post" action="{{ url($crud->route) }}" >
                 {!! csrf_field() !!}
               <div class="form-group col-md-12 subject {{ $errors->has('subject') ? ' has-error' : '' }}">
