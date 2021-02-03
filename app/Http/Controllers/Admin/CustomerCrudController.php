@@ -17,7 +17,7 @@ class CustomerCrudController extends MasterController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; edit as traitEdit; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
@@ -312,14 +312,7 @@ class CustomerCrudController extends MasterController
             abort(403, __('admin.no_permission'));
         }
 
-        $data['entry'] = $entry;
-        $data['crud'] = $this->crud;
-        $data['saveAction'] = $this->crud->getSaveAction();
-        $data['fields'] = $this->crud->getUpdateFields($id);
-        $data['title'] = trans('backpack::crud.edit').' '.$this->crud->entity_name;
-        $data['id'] = $id;
-
-        return view($this->crud->getEditView(), $data);
+        return $this->traitEdit($id);
     }
 
     /**
