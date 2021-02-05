@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "2.0",
         "laravelcollective/html": "^6.2",
-        "laravolt/avatar": "^4.0"
+        "laravolt/avatar": "^4.0",
+        "paypal/rest-api-sdk-php": "^1.14"
     },
     "require-dev": {
         "backpack/generators": "^3.1",

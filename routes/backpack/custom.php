@@ -103,22 +103,16 @@ if(Request::is('admin') || Request::is('admin/*')){
 
 		// #Subscription routes
 
-		// CRUD::resource('subscription', 'SubscriptionCrudController')->with(function(){
+		Route::crud('subscription', 'SubscriptionCrudController');
+        Route::get('subscription/packages', 'SubscriptionCrudController@showSubscriptionPackages')->name('subscription.packages');
+        Route::get('subscription/subscribe-package/{package}', 'SubscriptionCrudController@subscribeSubscription')->name('subscribe.paypal');
+        Route::get('subscription/execute', 'SubscriptionCrudController@executeSubscription')->name('paypal.subscription.execute');
+        Route::get('subscription/immediate/{subscription}', 'SubscriptionCrudController@immediateCancelSubscription');
+        Route::get('subscription/cancel/{subscription}', 'SubscriptionCrudController@cancelSubscription');
 
-		// 	Route::get('subscription/packages', 'SubscriptionCrudController@showSubscriptionPackages')->name('subscription.packages');
-	    // 	Route::get('subscription/subscribe-package/{package}', 'SubscriptionCrudController@subscribeSubscription')->name('subscribe.paypal');
-	    // 	Route::get('subscription/execute', 'SubscriptionCrudController@executeSubscription')->name('paypal.subscription.execute');
-	    // 	Route::get('subscription/immediate/{subscription}', 'SubscriptionCrudController@immediateCancelSubscription');
-
-		// 	Route::get('subscription/cancel/{subscription}', 'SubscriptionCrudController@cancelSubscription');
-        // });
-
-		// #Subscription payment routes
-        // CRUD::resource('subscription-payment', 'SubscriptionPaymentCrudController')->with(function(){
-        //     Route::get('subscription-payment/{id}/invoice', 'SubscriptionPaymentCrudController@invoice');
-        // });
-
-		// //CRUD::resource('subscription-payment', 'SubscriptionPaymentCrudController');
+		#Subscription payment routes
+        Route::crud('subscription-payment', 'SubscriptionPaymentCrudController');
+        Route::get('subscription-payment/{id}/invoice', 'SubscriptionPaymentCrudController@invoice');
 
 		Route::get('backup', 'BackupController@index');
 	    Route::put('backup/create', 'BackupController@create');
@@ -140,10 +134,10 @@ if(Request::is('admin') || Request::is('admin/*')){
 		Route::get('/dashboard', 'DashboardController@dashboard')->name('customer.dashboard');
         Route::post('add-rating', 'DashboardController@addRating');
         Route::post('set-reseller', 'DashboardController@setReseller');
-		// Route::get('edit-account-info', 'AccountController@getAccountInfoForm')->name('account.info');
-	    // Route::post('edit-account-info', 'AccountController@postAccountInfoForm');
-	    // Route::get('change-password', 'AccountController@getChangePasswordForm')->name('account.password');
-	    // Route::post('change-password', 'AccountController@postChangePasswordForm');
+		Route::get('edit-account-info', 'AccountController@getAccountInfoForm')->name('account.info');
+	    Route::post('edit-account-info', 'AccountController@postAccountInfoForm');
+	    Route::get('change-password', 'AccountController@getChangePasswordForm')->name('account.password');
+	    Route::post('change-password', 'AccountController@postChangePasswordForm');
 	    #File service routes
 		Route::crud('file-service', 'FileServiceCrudController');
         Route::get('file-service/{fileService}/download-orginal', 'FileServiceCrudController@downloadOrginalFile');

@@ -1,15 +1,20 @@
 @extends(backpack_view('blank'))
 
+@php
+  $defaultBreadcrumbs = [
+    trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+    __('customer_msg.menu_BuyTuningCredits') => false,
+  ];
+
+  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
 @section('header')
-	<section class="content-header">
-	  <h1>
+<section class="content-fluid">
+    <h2 style="margin-left:30px">
         <span class="text-capitalize">{{__('customer_msg.menu_BuyTuningCredits')}}</span>
-	  </h1>
-	  <ol class="breadcrumb">
-	    <li><a href="{{ url(config('backpack.base.route_prefix'), 'dashboard') }}">{{ trans('backpack::crud.admin') }}</a></li>
-	    <li class="active">{{__('customer_msg.menu_BuyTuningCredits')}}</li>
-	  </ol>
-	</section>
+    </h2>
+</section>
 @endsection
 
 @section('content')
@@ -24,7 +29,7 @@
 	<div class="col-md-12">
 		<form method="POST" action="{{ route('pay.with.paypal') }}">
 		  	@csrf
-		  	<div class="box">
+		  	<div class="card">
                 @if($tuningCreditGroup || $tuningEVCCreditGroup)
                     @if($tuningCreditGroup)
                     <input type="hidden" name="tuning_credit_group_id" value="{{ $tuningCreditGroup->id }}">
@@ -45,7 +50,7 @@
                     <div class="box-body row display-flex-wrap" style="display: flex; flex-wrap: wrap;">
                         @if($tuningCreditGroup)
 			    		<div class="col-md-6 table-responsive">
-                            <h2 style='color: white'>
+                            <h2 style='color: grey'>
                                 <span class="text-capitalize">Original</span>
                             </h2>
 			    			<table class="table table-striped">
@@ -197,7 +202,7 @@
                         </div>
                         @endif
 			    	</div><!-- /.box-body -->
-				    <div class="box-footer">
+				    <div class="card-footer">
 		                <div id="saveActions" class="form-group">
 						    <div class="btn-group">
 						        <button type="submit" class="btn btn-danger" {{ ($isPayAble == FALSE)?'disabled=disabled':'' }}>
