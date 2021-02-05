@@ -48,3 +48,5 @@ Route::post('/user-register/', '\App\Http\Controllers\UserRegisterController@cre
 Route::get('/browser', '\App\Http\Controllers\UserRegisterController@browser')->name('browser');
 Route::get('/browser/result', '\App\Http\Controllers\UserRegisterController@browserResult')->name('browser.result');
 Route::get('/browser/category', '\App\Http\Controllers\UserRegisterController@browserCategory')->name('browser.category');
+
+Route::get('lang/{locale}', 'LocalizationController@index');

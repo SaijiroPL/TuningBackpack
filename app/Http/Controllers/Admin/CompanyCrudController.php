@@ -201,7 +201,6 @@ class CompanyCrudController extends MasterController
             'type' => 'image',
             'prefix' => 'uploads/logo/',
             'tab' => 'Name and address',
-            'upload' => true,
             'wrapperAttributes'=>['class'=>'form-group col-md-6 col-xs-12']
         ]);
 
@@ -486,6 +485,18 @@ class CompanyCrudController extends MasterController
             'attributes'=>['placeholder'=>'Paypal currency code'],
             'wrapperAttributes'=>['class'=>'form-group col-md-6 col-xs-12']
         ], 'create');
+
+        $this->crud->addSaveActions([
+            [
+                'name' => 'Save',
+                'visible' => function($crud) {
+                    return true;
+                },
+                'redirect' => function($crud, $request, $itemId) {
+                    return route('admin.dashboard');
+                },
+            ],
+        ]);
 
 
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
@@ -969,17 +980,6 @@ class CompanyCrudController extends MasterController
     }
 
     public function profile() {
-        $this->crud->addSaveActions([
-            [
-                'name' => 'Save',
-                'visible' => function($crud) {
-                    return true;
-                },
-                'redirect' => function($crud, $request, $itemId) {
-                    return $crud->route;
-                },
-            ],
-        ]);
         $this->crud->setEditView('vendor.custom.common.settings.company_setting');
         $this->crud->setOperationSetting('showCancelButton', false);
         $user = \Auth::guard('admin')->user();

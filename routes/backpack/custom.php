@@ -14,13 +14,13 @@ if(Request::is('admin') || Request::is('admin/*')){
 	], function () {
 		Route::get('/dashboard', 'DashboardController@dashboard')->name('admin.dashboard');
 
-		// Route::get('/edit-account-info', 'AccountController@getAccountInfoForm')->name('account.info');
-	    // Route::post('/edit-account-info', 'AccountController@postAccountInfoForm');
-	    // Route::get('/change-password', 'AccountController@getChangePasswordForm')->name('account.password');
-	    // Route::post('/change-password', 'AccountController@postChangePasswordForm');
-		// //changes
-        //     Route::post('/set_default_tier', 'TuningCreditCrudController@set_default_tier');
-        //     Route::post('/set_evc_default_tier', 'TuningEVCCreditCrudController@set_default_tier');
+		Route::get('/edit-account-info', 'AccountController@getAccountInfoForm')->name('account.info');
+	    Route::post('/edit-account-info', 'AccountController@postAccountInfoForm');
+	    Route::get('/change-password', 'AccountController@getChangePasswordForm')->name('account.password');
+	    Route::post('/change-password', 'AccountController@postChangePasswordForm');
+		//changes
+        Route::post('/set_default_tier', 'TuningCreditCrudController@set_default_tier');
+        Route::post('/set_evc_default_tier', 'TuningEVCCreditCrudController@set_default_tier');
 
 
 		#Customers routes
@@ -99,12 +99,7 @@ if(Request::is('admin') || Request::is('admin/*')){
             Route::get('company/{company}/company-account-type','CompanyCrudController@companyAccountType');
             Route::get('company/{company}/account-activate','CompanyCrudController@accountActivate');
         });
-        Route::get('company-setting', 'CompanyCrudController@profile');
-
-		// #Company setting routes
-
-		// Route::get('company-setting', 'CompanySettingController@showSetting')->name('company.setting');
-		// Route::post('update-company-setting', 'CompanySettingController@update')->name('update.company.setting');
+        Route::get('company-setting', 'CompanyCrudController@profile')->name('admin.profile');
 
 		// #Subscription routes
 
@@ -125,21 +120,10 @@ if(Request::is('admin') || Request::is('admin/*')){
 
 		// //CRUD::resource('subscription-payment', 'SubscriptionPaymentCrudController');
 
-		// Route::get('backup', 'BackupController@index');
-	    // Route::put('backup/create', 'BackupController@create');
-	    // Route::get('backup/download/{file_name?}', 'BackupController@download');
-	    // Route::delete('backup/delete/{file_name?}', 'BackupController@delete')->where('file_name', '(.*)');
-
-        //     #Tickets routes
-        //     CRUD::resource('tickets', 'TicketsCrudController');
-
-        //     Route::group(['prefix' => config('backpack.base.route_prefix', 'admin'), 'middleware' => ['web', 'auth']], function () {
-        //         CRUD::resource('tickets', 'Admin\TicketsCrudController')->with(function(){
-        //             Route::get('tickets/{ticket}/download-file', 'TicketsCrudController@downloadFile');
-        //             Route::get('tickets/{ticket}/mark-close', 'TicketsCrudController@markClose');
-		//     Route::post('upload-ticket-file', 'TicketsCrudController@uploadFile');
-		// });
-        //     });
+		Route::get('backup', 'BackupController@index');
+	    Route::put('backup/create', 'BackupController@create');
+	    Route::get('backup/download/{file_name?}', 'BackupController@download');
+	    Route::delete('backup/delete/{file_name?}', 'BackupController@delete')->where('file_name', '(.*)');
 
 		#Slider Manager routes
         Route::crud('slidermanager', 'SliderManagerCrudController');
