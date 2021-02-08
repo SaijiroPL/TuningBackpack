@@ -8,6 +8,7 @@ use App\Http\Requests\SubscriptionRequest as UpdateRequest;
 use PayPal\Auth\OAuthTokenCredential;
 use Illuminate\Http\Request;
 use PayPal\Rest\ApiContext;
+use App\Helpers\Helper;
 use Config;
 /**
  * Class SubscriptionCrudController
@@ -147,7 +148,7 @@ class SubscriptionCrudController extends MasterController
     public function showSubscriptionPackages(){
         if(!$this->user->hasActiveSubscription()){
             $company = \App\Models\Company::where('is_default', 1)->first();
-            Config::set('site.currency_sign', \App\Helpers\Helper::getCurrencySymbol($company->paypal_currency_code));
+            Config::set('site.currency_sign', Helper::getCurrencySymbol($company->paypal_currency_code));
             $data['title'] = 'Subscription plan';
             $data['packages'] = \App\Models\Package::get();
             return view('vendor.custom.common.subscription.packages', $data);

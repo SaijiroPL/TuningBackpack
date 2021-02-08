@@ -91,7 +91,7 @@
             </table>
         </div>
 
-        <a href="{{ url('customer/file-service') }}" class="btn btn-danger">{{__('customer_msg.btn_ViewAllFileServices')}} <i class="fa fa-arrow-right"></i></a>
+        <a href="{{ url('customer/file-service') }}" class="btn btn-primary">{{__('customer_msg.btn_ViewAllFileServices')}} <i class="fa fa-arrow-right"></i></a>
     </div>
 </div>
 <br/>

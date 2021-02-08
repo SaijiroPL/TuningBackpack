@@ -1,14 +1,20 @@
 @extends(backpack_view('blank'))
 
+@php
+  $defaultBreadcrumbs = [
+    config('backpack.base.project_name') => backpack_url(),
+    'Packages' => false,
+  ];
+
+  // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+  $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
+
 @section('header')
     <section class="content-header">
-        <h1>
+        <h2 style="margin-left: 30px;">
             Packages<small>Subscribe any of the package</small>
         </h1>
-        <ol class="breadcrumb">
-            <li><a href="{{ backpack_url() }}">{{ config('backpack.base.project_name') }}</a></li>
-            <li class="active">Packages</li>
-        </ol>
     </section>
 @endsection
 
@@ -17,12 +23,12 @@
         @if($packages->count() > 0)
             @foreach($packages as $package)
                 <div class="col-md-4">
-                    <div class="box">
-                        <div class="box-header with-border">
+                    <div class="card">
+                        <div class="card-header with-border">
                             <h3 class="box-title">{{ $package->name }}</h3>
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body" style="min-height: 150px">
+                        <div class="card-body" style="min-height: 150px">
                             <div class="table-responsive">
                                 <table class="table table table-striped">
                                     <tbody>
@@ -44,7 +50,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="box-footer">
+                        <div class="card-footer">
                             <a href="{{ route('subscribe.paypal', $package->id) }}" class="btn btn-primary">Subscribe plan</a>
                         </div>
                     </div>

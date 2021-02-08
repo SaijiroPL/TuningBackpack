@@ -12,7 +12,7 @@
                         </p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('subscription.packages') }}" class="btn btn-danger"> {{__('customer_msg.btn_ChoosePackages')}}</a>
+                        <a href="{{ route('subscription.packages') }}" class="btn btn-primary"> {{__('customer_msg.btn_ChoosePackages')}}</a>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="card-body display-flex-wrap" style="display: flex; flex-wrap: wrap;">
-                    <a href="company/@php echo $user->company->id @endphp/company-account-type" class="btn btn-danger">Want to  @php echo $changeAccountType @endphp ? </a>
+                    <a href="company/@php echo $user->company->id @endphp/company-account-type" class="btn btn-primary">Want to  @php echo $changeAccountType @endphp ? </a>
                 </div>
 			</div>
 		</div>
@@ -146,6 +146,6 @@
             </table>
         </div>
 
-        <a href="{{ backpack_url('order') }}" class="btn btn-danger">{{__('customer_msg.btn_ViewAllOrders')}} <i class="fa fa-arrow-right"></i></a>
+        <a href="{{ backpack_url('order') }}" class="btn btn-primary">{{__('customer_msg.btn_ViewAllOrders')}} <i class="fa fa-arrow-right"></i></a>
     </div>
 </div>
