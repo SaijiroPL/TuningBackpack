@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
@@ -13,33 +13,33 @@ use View;
 
 class UserRegisterController extends Controller
 {
-	
+
 	public function __construct()
-    {
-        $this->middleware('guest:customer')->except('logout');
-        $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+	{
+		$this->middleware('guest:customer')->except('logout');
+		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
 		$host = $protocol.request()->getHttpHost();
 		$this->company = \App\Models\Company::where('domain_link', $host)->first();
-        if(!$this->company){
-            abort(400, 'No such domain('.url("").') is registerd with system. Please contact to webmaster.');
-        }
-        view::share('company', $this->company);
-    }
-	
+		if(!$this->company){
+				abort(400, 'No such domain('.url("").') is registerd with system. Please contact to webmaster.');
+		}
+		view::share('company', $this->company);
+	}
+
 	public function register(){
 		$company  = $this->company;
 		$tuningpricetype =  \App\Models\TuningCreditGroup::where('company_id', $company->id)->orderBy('is_default', 'DESC')->pluck('name', 'id');
-		
+
 		return View::make("auth.user_register", compact('company','tuningpricetype'));
 	}
-	
+
 	function create(Request $request){
 		$company  = $this->company;
-		
+
 		$request->company_id = $company->id;
-		
+
 		$email = $request->email;
-		
+
 		$validatedData = $request->validate([
 				'first_name' => 'required|max:255',
 				'last_name' => 'required|max:255',
@@ -54,11 +54,11 @@ class UserRegisterController extends Controller
 				'email'=>[
 					'required'=>'The email field is required.',
 					'unique'=>'This email is already exicts.',
-					
+
 				]
 			]
 		);
-		
+
 		$model = new User();
         $model->tuning_credit_group_id = request('tuning_credit_group_id');
         $model->title = request('title');
@@ -75,10 +75,10 @@ class UserRegisterController extends Controller
         $model->phone =request('phone');
         $model->tools =request('tools');
         $model->company_id = $company->id;
-        
+
 		$model->save();
 		return redirect()->route('users_registers')->with(['message'=>'Registration has been saved successfully.','status'=>'success']);
 	}
-	
-	
+
+
 }
